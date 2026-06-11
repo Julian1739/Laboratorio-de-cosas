@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Artista del Sandwich</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pan: #8B5E3C;
+    --pan-light: #C4854A;
+    --mostaza: #F2C14E;
+    --tomate: #E84855;
+    --lechuga: #5C9E6E;
+    --crema: #FFF8ED;
+    --crema-dark: #F5E9D3;
+    --texto: #2D1A0E;
+    --gris: #8A7A6F;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--crema);
+    color: var(--texto);
+    min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 430px;
+    margin: 0 auto;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; flex-direction: column; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ===== PANTALLA INICIO ===== */
+  #screen-intro {
+    background: linear-gradient(160deg, #F2C14E 0%, #E8A83A 40%, #C4854A 100%);
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #screen-intro::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  #screen-intro::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 240px; height: 240px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .intro-badge {
+    background: var(--tomate);
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    display: inline-block;
+    text-transform: uppercase;
+  }
+
+  .intro-emoji { font-size: 80px; margin-bottom: 8px; display: block; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+  .intro-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 42px;
+    color: var(--texto);
+    line-height: 1.05;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 0 rgba(139,94,60,0.2);
+  }
+
+  .intro-subtitle {
+    font-size: 15px;
+    color: rgba(45,26,14,0.75);
+    font-weight: 600;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .sandwich-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 36px;
+  }
+
+  .layer-preview {
+    border-radius: 8px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    animation: slideIn 0.4s ease both;
+  }
+  .layer-preview:nth-child(1) { width: 180px; background: var(--pan); animation-delay: 0.1s; }
+  .layer-preview:nth-child(2) { width: 160px; background: var(--lechuga); animation-delay: 0.25s; }
+  .layer-preview:nth-child(3) { width: 170px; background: var(--tomate); animation-delay: 0.4s; }
+  .layer-preview:nth-child(4) { width: 160px; background: #F5B800; animation-delay: 0.55s; color: var(--texto); }
+  .layer-preview:nth-child(5) { width: 180px; background: var(--pan); animation-delay: 0.7s; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
+
+  .btn-primary {
+    background: var(--tomate);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px 40px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #B5303B, 0 8px 20px rgba(232,72,85,0.35);
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    max-width: 280px;
+  }
+  .btn-primary:active { transform: translateY(4px); box-shadow: 0 2px 0 #B5303B, 0 4px 10px rgba(232,72,85,0.25); }
+
+  .intro-info {
+    margin-top: 20px;
+    font-size: 13px;
+    color: rgba(45,26,14,0.6);
+    font-weight: 600;
+  }
+
+  /* ===== PANTALLA TUTORIAL ===== */
+  #screen-tutorial {
+    padding: 0;
+    background: var(--crema);
+  }
+
+  .tutorial-header {
+    background: var(--pan);
+    padding: 24px 24px 20px;
+    color: white;
+    text-align: center;
+  }
+  .tutorial-header h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .tutorial-header p { font-size: 13px; opacity: 0.85; font-weight: 600; }
+
+  .tutorial-body { padding: 24px; flex: 1; }
+
+  .sandwich-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .layer-card {
+    width: 100%;
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  }
+  .layer-card.pan-top, .layer-card.pan-bottom {
+    background: linear-gradient(135deg, #C4854A, #8B5E3C);
+    color: white;
+  }
+  .layer-card.relleno {
+    background: linear-gradient(135deg, #E84855, #C23040);
+    color: white;
+  }
+  .layer-icon { font-size: 28px; flex-shrink: 0; }
+  .layer-title { font-family: 'Fredoka One', cursive; font-size: 16px; line-height: 1.1; }
+  .layer-desc { font-size: 12px; opacity: 0.9; font-weight: 600; margin-top: 2px; }
+
+  .connector {
+    width: 3px; height: 10px;
+    background: var(--gris);
+    opacity: 0.3;
+    border-radius: 2px;
+  }
+
+  .tip-box {
+    background: linear-gradient(135deg, #FFF3CD, #FFE8A0);
+    border-left: 4px solid var(--mostaza);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
+  }
+  .tip-box span { font-size: 18px; margin-right: 8px; }
+
+  /* ===== PANTALLA JUEGO ===== */
+  #screen-game {
+    background: var(--crema);
+    flex-direction: column;
+  }
+
+  .game-topbar {
+    background: var(--pan);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .game-topbar-title {
+    font-family: 'Fredoka One', cursive;
+    color: white;
+    font-size: 16px;
+  }
+  .score-badge {
+    background: var(--mostaza);
+    color: var(--texto);
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .progress-bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--mostaza);
+    transition: width 0.5s ease;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .scenario-card {
+    background: white;
+    margin: 16px;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .scenario-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--tomate);
+    margin-bottom: 6px;
+  }
+  .scenario-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--texto);
+    line-height: 1.5;
+  }
+  .scenario-person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--crema-dark);
+  }
+  .person-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .person-info { font-size: 12px; font-weight: 700; color: var(--gris); }
+  .person-name { font-size: 14px; font-weight: 800; color: var(--texto); }
+
+  /* Sandwich en construcción */
+  .sandwich-build-area {
+    margin: 0 16px 16px;
+  }
+  .build-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gris);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sandwich-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-height: 100px;
+    padding: 10px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  .layer-built {
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    animation: layerDrop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+    max-width: 280px;
+    width: 100%;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    position: relative;
+  }
+  @keyframes layerDrop { from{opacity:0;transform:translateY(-20px) scale(0.9)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+  .layer-built.pan { background: linear-gradient(135deg, #C4854A, #8B5E3C); }
+  .layer-built.pos { background: linear-gradient(135deg, #5C9E6E, #3D7A52); }
+  .layer-built.critica { background: linear-gradient(135deg, #E84855, #C23040); }
+  .layer-built.cierre { background: linear-gradient(135deg, #4A90D9, #2E6DB4); }
+
+  .empty-bread {
+    width: 180px; height: 24px;
+    background: repeating-linear-gradient(45deg, var(--crema-dark) 0px, var(--crema-dark) 4px, transparent 4px, transparent 8px);
+    border: 2px dashed #C4854A;
+    border-radius: 8px;
+    opacity: 0.5;
+  }
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 16px 12px;
+  }
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .step-dot.done { background: var(--lechuga); color: white; }
+  .step-dot.active { background: var(--tomate); color: white; box-shadow: 0 0 0 3px rgba(232,72,85,0.25); }
+  .step-dot.pending { background: var(--crema-dark); color: var(--gris); }
+  .step-line { flex: 1; height: 3px; background: var(--crema-dark); border-radius: 2px; }
+  .step-line.done { background: var(--lechuga); }
+
+  .options-section { padding: 0 16px 24px; }
+  .options-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    color: var(--texto);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .option-btn {
+    width: 100%;
+    background: white;
+    border: 2px solid var(--crema-dark);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--texto);
+    text-align: left;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.45;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .option-btn:active { transform: scale(0.98); }
+  .option-btn.selected-good {
+    border-color: var(--lechuga);
+    background: linear-gradient(135deg, #F0FFF4, #E8F5ED);
+  }
+  .option-btn.selected-ok {
+    border-color: var(--mostaza);
+    background: linear-gradient(135deg, #FFFEF0, #FFF8D6);
+  }
+  .option-btn.selected-bad {
+    border-color: var(--tomate);
+    background: linear-gradient(135deg, #FFF5F5, #FFE8E8);
+  }
+  .option-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .tag-buena { background: #E8F5ED; color: var(--lechuga); }
+  .tag-ok { background: #FFF8D6; color: #A07A00; }
+  .tag-mala { background: #FFE8E8; color: var(--tomate); }
+
+  .feedback-bubble {
+    background: white;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin: 0 16px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
+    line-height: 1.5;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .feedback-bubble.visible { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .fb-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .fb-title { font-family: 'Fredoka One', cursive; font-size: 15px; margin-bottom: 4px; }
+  .fb-good .fb-title { color: var(--lechuga); }
+  .fb-ok .fb-title { color: #A07A00; }
+  .fb-bad .fb-title { color: var(--tomate); }
+
+  .btn-next {
+    background: var(--pan);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 28px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #5C3D1E;
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: calc(100% - 32px);
+    margin: 0 16px 24px;
+    display: none;
+  }
+  .btn-next.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .btn-next:active { transform: translateY(3px); box-shadow: 0 2px 0 #5C3D1E; }
+
+  /* ===== PANTALLA RESULTADO ===== */
+  #screen-result {
+    align-items: center;
+    justify-content: flex-start;
+    padding: 32px 24px 40px;
+    background: var(--crema);
+  }
+
+  .result-header { text-align: center; width: 100%; margin-bottom: 24px; }
+  .result-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 32px;
+    color: var(--texto);
+    line-height: 1.1;
+  }
+  .result-emoji { font-size: 64px; display: block; margin-bottom: 8px; }
+
+  .score-display {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  .score-number {
+    font-family: 'Fredoka One', cursive;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-label { font-size: 13px; font-weight: 700; color: var(--gris); }
+  .score-stars { font-size: 28px; margin-top: 8px; }
+
+  .result-sandwich {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+  .result-layer {
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 300px;
+    animation: layerDrop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  .result-tip {
+    background: linear-gradient(135deg, #FFF3CD, #FFE8A0);
+    border-radius: 16px;
+    padding: 16px 18px;
+    width: 100%;
+    margin-bottom: 24px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--texto);
+    line-height: 1.6;
+  }
+  .result-tip-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 15px;
+    color: #8B5E00;
+    margin-bottom: 6px;
+  }
+
+  .btn-replay {
+    background: var(--tomate);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 19px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 #B5303B;
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .btn-replay:active { transform: translateY(3px); box-shadow: 0 3px 0 #B5303B; }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--pan);
+    border: 2.5px solid var(--pan);
+    border-radius: 16px;
+    padding: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 17px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.15s;
+  }
+  .btn-secondary:active { background: var(--crema-dark); }
+
+  /* Ripple en opciones */
+  .option-btn { overflow: hidden; }
+
+  /* Shake animation para respuesta mala */
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(3px)} }
+  .shake { animation: shake 0.4s ease; }
+
+  /* Bounce para respuesta buena */
+  @keyframes bounce { 0%,100%{transform:scale(1)} 40%{transform:scale(1.04)} 70%{transform:scale(0.97)} }
+  .bounce { animation: bounce 0.4s ease; }
+</style>
+</head>
+<body>
+
+<!-- ===== PANTALLA INTRO ===== -->
+<div id="screen-intro" class="screen active">
+  <div class="intro-badge">🎓 Habilidades interpersonales</div>
+  <span class="intro-emoji">🥪</span>
+  <h1 class="intro-title">Artista del Sandwich</h1>
+  <p class="intro-subtitle">Aprende a dar retroalimentación difícil<br>sin que nadie se sienta atacado</p>
+
+  <div class="sandwich-preview">
+    <div class="layer-preview">PAN POSITIVO</div>
+    <div class="layer-preview">ALGO BUENO QUE NOTAS</div>
+    <div class="layer-preview">CRÍTICA REAL</div>
+    <div class="layer-preview">SUGERENCIA CONCRETA</div>
+    <div class="layer-preview">CIERRE MOTIVADOR</div>
+  </div>
+
+  <button class="btn-primary" onclick="showTutorial()">¡Vamos a cocinar! 👨‍🍳</button>
+  <p class="intro-info">3 escenarios · ~5 minutos</p>
+</div>
+
+<!-- ===== PANTALLA TUTORIAL ===== -->
+<div id="screen-tutorial" class="screen">
+  <div class="tutorial-header">
+    <h2>🥪 La Técnica del Sandwich</h2>
+    <p>Tres capas que hacen la diferencia</p>
+  </div>
+
+  <div class="tutorial-body">
+    <div class="sandwich-diagram">
+      <div class="layer-card pan-top">
+        <span class="layer-icon">🍞</span>
+        <div>
+          <div class="layer-title">PAN DE ARRIBA</div>
+          <div class="layer-desc">Apertura positiva — reconoce algo genuino en la persona antes de entrar al tema difícil.</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="layer-card relleno">
+        <span class="layer-icon">🥩</span>
+        <div>
+          <div class="layer-title">EL RELLENO (la parte real)</div>
+          <div class="layer-desc">La crítica o corrección, dicha con claridad y sin rodeos, pero con respeto. Sin esto, el sandwich no alimenta.</div>
+        </div>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="layer-card pan-bottom">
+        <span class="layer-icon">🍞</span>
+        <div>
+          <div class="layer-title">PAN DE ABAJO</div>
+          <div class="layer-desc">Cierre motivador — confía en la persona, ofrece apoyo, o señala el camino hacia adelante.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <span>⚠️</span>El sandwich falla cuando el relleno desaparece. El objetivo no es suavizar la crítica hasta hacerla irreconocible — es hacer que sea <em>recibible</em>.
+    </div>
+
+    <button class="btn-primary" style="max-width:100%; margin: 0 auto; display:block;" onclick="startGame()">¡Entendido, a practicar! 🔪</button>
+  </div>
+</div>
+
+<!-- ===== PANTALLA JUEGO ===== -->
+<div id="screen-game" class="screen">
+  <div class="game-topbar">
+    <span class="game-topbar-title" id="game-step-label">Paso 1 de 3</span>
+    <span class="score-badge">⭐ <span id="score-display">0</span></span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div style="overflow-y:auto; flex:1; padding-bottom: 8px;" id="scroll-area">
+
+    <div class="scenario-card">
+      <div class="scenario-label">SITUACIÓN</div>
+      <div class="scenario-text" id="scenario-text">...</div>
+      <div class="scenario-person">
+        <div class="person-avatar" id="person-avatar" style="background:#FFD6A5">🙂</div>
+        <div>
+          <div class="person-name" id="person-name">Persona</div>
+          <div class="person-info" id="person-context">Contexto</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-indicator" id="step-indicator">
+      <!-- generado dinámicamente -->
+    </div>
+
+    <div class="sandwich-build-area">
+      <div class="build-label">🥪 Tu sandwich en construcción</div>
+      <div class="sandwich-visual" id="sandwich-visual">
+        <div class="empty-bread"></div>
+      </div>
+    </div>
+
+    <div class="feedback-bubble" id="feedback-bubble">
+      <span class="fb-icon" id="fb-icon"></span>
+      <div class="fb-title" id="fb-title"></div>
+      <div id="fb-text"></div>
+    </div>
+
+    <div class="options-section">
+      <div class="options-label" id="options-label">🍞 Elige tu pan de arriba</div>
+      <div id="options-container">
+        <!-- generado dinámicamente -->
+      </div>
+    </div>
+
+    <button class="btn-next" id="btn-next" onclick="nextStep()">Siguiente capa →</button>
+
+  </div>
+</div>
+
+<!-- ===== PANTALLA RESULTADO ===== -->
+<div id="screen-result" class="screen">
+  <div class="result-header">
+    <span class="result-emoji" id="result-emoji">🥪</span>
+    <h2 class="result-title" id="result-title">¡Sandwich completado!</h2>
+  </div>
+
+  <div class="score-display">
+    <div class="score-number" id="final-score" style="color: var(--tomate);">0</div>
+    <div class="score-label">puntos de sabor</div>
+    <div class="score-stars" id="score-stars">⭐⭐⭐</div>
+  </div>
+
+  <div class="result-sandwich" id="result-sandwich"></div>
+
+  <div class="result-tip">
+    <div class="result-tip-title">🧠 Lo que se lleva este sandwich:</div>
+    <div id="result-tip-text"></div>
+  </div>
+
+  <button class="btn-replay" onclick="replayGame()">🔄 Otro escenario</button>
+  <button class="btn-secondary" onclick="showTutorial()">📖 Revisar la técnica</button>
+</div>
+
+<script>
+// ============================================================
+// DATOS DEL JUEGO
+// ============================================================
+const SCENARIOS = [
+  {
+    id: 1,
+    text: "Tu compañero de trabajo entrega los reportes siempre tarde. Hoy llega 3 días después del plazo, otra vez. Necesitas decirle algo.",
+    person: { name: "Marco", context: "Compañero de equipo", avatar: "😅", bg: "#FFD6A5" },
+    layers: [
+      {
+        id: "pan_top",
+        label: "🍞 Pan de arriba",
+        question: "¿Cómo abres la conversación?",
+        layerType: "pan",
+        options: [
+          { text: "Marco, sé que tienes mucho trabajo encima y que siempre te esfuerzas en que salga bien.", quality: "good", tag: "buena", points: 20, feedback: { icon: "👍", title: "¡Pan dorado!", text: "Reconoces su esfuerzo sin ser condescendiente. La persona baja la guardia porque siente que la ves." } },
+          { text: "Oye Marco, ¿tienes un momento? Quería hablar contigo sobre algo.", quality: "ok", tag: "ok", points: 10, feedback: { icon: "🤔", title: "Pan neutro", text: "No está mal, pero es genérico. Un reconocimiento específico hace que la persona se sienta vista y más dispuesta a escuchar." } },
+          { text: "Marco, ya es la tercera vez este mes. Hay que resolver esto.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "🔥", title: "¡Sin pan!", text: "Ir directo con el número de veces siente como un ataque. La persona se pone a la defensiva antes de que puedas decir algo útil." } },
+        ]
+      },
+      {
+        id: "relleno",
+        label: "🥩 El relleno",
+        question: "Ahora dile lo que necesitas decir. ¿Cómo lo formulas?",
+        layerType: "critica",
+        options: [
+          { text: "Cuando el reporte llega tarde, el equipo tiene que hacer malabares para cubrir los plazos. Necesito que llegue el jueves como máximo.", quality: "good", tag: "buena", points: 25, feedback: { icon: "💯", title: "¡Relleno perfecto!", text: "Específico, observable, con consecuencia concreta y una petición clara. No es un ataque a la persona — es información sobre el impacto." } },
+          { text: "Es que los reportes no llegan a tiempo y eso nos complica a todos.", quality: "ok", tag: "ok", points: 12, feedback: { icon: "🧐", title: "Relleno aguado", text: "Va por buen camino pero es vago. ¿Cuánto es 'no a tiempo'? ¿Qué significa 'complica'? Cuanto más específico, más accionable." } },
+          { text: "Tienes que organizarte mejor, esto no puede seguir así.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "😬", title: "Relleno tóxico", text: "Atacas la identidad de la persona ('organizarte mejor') en vez de la conducta. Esto cierra la conversación." } },
+        ]
+      },
+      {
+        id: "pan_bottom",
+        label: "🍞 Pan de abajo",
+        question: "¿Cómo cierras para que se sienta apoyo y no regaño?",
+        layerType: "cierre",
+        options: [
+          { text: "Sé que puedes con esto. Si algo te está complicando el proceso, cuéntame y lo resolvemos juntos.", quality: "good", tag: "buena", points: 20, feedback: { icon: "🌟", title: "¡Cierre de lujo!", text: "Muestras confianza en la persona, abres espacio a que hable de obstáculos reales, y te posicionas como aliado." } },
+          { text: "Bueno, ya sabes lo que hay que hacer. Suerte.", quality: "ok", tag: "ok", points: 8, feedback: { icon: "😐", title: "Cierre tibio", text: "Deja la conversación colgando en el aire. La persona queda con la crítica encima sin sentir que hay camino a seguir." } },
+          { text: "Esto afecta tu evaluación de desempeño, solo para que lo sepas.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "💀", title: "Sandwich envenenado", text: "Terminar con amenaza destruye todo lo que construiste. El sandwich se convierte en intimidación." } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    text: "Tu hermana menor tiene 17 años y últimamente está publicando en redes fotos y comentarios que podrían afectar su imagen. Quieres hablar con ella pero sabes que se pone muy defensiva.",
+    person: { name: "Sofía", context: "Hermana menor, 17 años", avatar: "🙄", bg: "#FFB3C6" },
+    layers: [
+      {
+        id: "pan_top",
+        label: "🍞 Pan de arriba",
+        question: "¿Cómo empiezas sin que se cierre al instante?",
+        layerType: "pan",
+        options: [
+          { text: "Sofi, de verdad me parece que tienes un criterio muy propio para expresarte y que no tienes miedo de decir lo que piensas.", quality: "good", tag: "buena", points: 20, feedback: { icon: "✨", title: "Pan auténtico", text: "Reconoces algo real y positivo en ella: su autenticidad. Eso hace que la crítica posterior no suene como un ataque a su identidad." } },
+          { text: "Sofi, ¿podemos hablar de algo? No es para regañarte.", quality: "ok", tag: "ok", points: 8, feedback: { icon: "🤷", title: "Pan con poco sabor", text: "Decir 'no es para regañarte' ya le avisa que viene un regaño. Mejor entrar con algo genuinamente positivo." } },
+          { text: "Sofi, tus redes últimamente están muy raras, ¿qué te pasa?", quality: "bad", tag: "mala", points: 0, feedback: { icon: "💥", title: "Sin pan y con sal", text: "'¿Qué te pasa?' suena a juicio inmediato. Con un adolescente, eso activa el modo defensivo en menos de un segundo." } },
+        ]
+      },
+      {
+        id: "relleno",
+        label: "🥩 El relleno",
+        question: "¿Cómo le dices tu preocupación real sin sonar a sermón?",
+        layerType: "critica",
+        options: [
+          { text: "Vi algunos posts últimamente y me preocupa cómo podrían interpretarse en el futuro — en trabajo, universidades. No porque estén mal, sino por cómo funciona el mundo afuera.", quality: "good", tag: "buena", points: 25, feedback: { icon: "🎯", title: "Relleno con empatía", text: "Describes la preocupación concreta (consecuencias futuras), aclaras que no es un juicio moral, y le das contexto de por qué importa." } },
+          { text: "Las cosas que publicas a veces no son muy adecuadas para tu edad.", quality: "ok", tag: "ok", points: 10, feedback: { icon: "👀", title: "Relleno ambiguo", text: "¿Qué es 'adecuado'? Sin especificar, ella puede pensar que estás atacando su forma de ser en lugar de señalar algo concreto." } },
+          { text: "No puedes andar publicando esas cosas, ya eres grande para saber que eso está mal.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "🚫", title: "Relleno tóxico", text: "Mezclas crítica con moralismo ('ya eres grande para saber'). Eso activa vergüenza, no reflexión." } },
+        ]
+      },
+      {
+        id: "pan_bottom",
+        label: "🍞 Pan de abajo",
+        question: "¿Cómo cierras para que sepa que estás de su lado?",
+        layerType: "cierre",
+        options: [
+          { text: "No te lo digo para controlarte. Te lo digo porque quiero que tú tengas el control de tu propia imagen. Si quieres, podemos pensar juntas qué quieres proyectar.", quality: "good", tag: "buena", points: 22, feedback: { icon: "💪", title: "¡Cierre empoderador!", text: "Le devuelves la agencia. No eres la que controla — eres aliada en su autonomía. Eso es difícil de rechazar." } },
+          { text: "Bueno, ya te dije lo que pienso. Tú decides.", quality: "ok", tag: "ok", points: 8, feedback: { icon: "🫤", title: "Cierre pasivo", text: "Termina el mensaje pero no ofrece conexión ni camino. Ella queda con la crítica sin sentir apoyo." } },
+          { text: "Si en el futuro te arrepientes de algo no digas que no te lo advertí.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "☠️", title: "Cierre tóxico", text: "Esto es una advertencia velada que dice 'ya verás'. Destruye cualquier confianza que hayas construido antes." } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    text: "Estás a cargo de un pequeño proyecto voluntario. Uno de los integrantes llega a las reuniones pero nunca hace las tareas que le asignan. El equipo empieza a resentirlo.",
+    person: { name: "Diego", context: "Voluntario del proyecto", avatar: "😬", bg: "#C7F2A4" },
+    layers: [
+      {
+        id: "pan_top",
+        label: "🍞 Pan de arriba",
+        question: "Diego puede ponerse a la defensiva fácilmente. ¿Cómo abres?",
+        layerType: "pan",
+        options: [
+          { text: "Diego, valoro que sigas viniendo a las reuniones. Se nota que el proyecto te importa y eso no es menor.", quality: "good", tag: "buena", points: 20, feedback: { icon: "🌱", title: "Pan bien cocido", text: "Reconoces lo que SÍ hace (asistir) en lugar de ir directo a lo que no hace. Eso es honesto y demuestra que lo observas con justicia." } },
+          { text: "Diego, necesito hablar contigo sobre el proyecto.", quality: "ok", tag: "ok", points: 6, feedback: { icon: "😶", title: "Pan sin tostar", text: "Es neutral pero no abre nada positivo. Diego entra en la conversación sin saber si esto va a ir bien o mal." } },
+          { text: "Diego, el equipo ya está hablando de ti. Necesitamos que hagas tu parte.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "💣", title: "Pan que quema", text: "Empezar diciéndole que 'el equipo habla de él' lo pone en posición de acusado antes de que hable. La conversación ya murió." } },
+        ]
+      },
+      {
+        id: "relleno",
+        label: "🥩 El relleno",
+        question: "¿Cómo describes el problema sin atacarlo?",
+        layerType: "critica",
+        options: [
+          { text: "Las últimas tres tareas asignadas no llegaron completas al equipo. Eso ha cargado a otras personas y está afectando los tiempos del proyecto.", quality: "good", tag: "buena", points: 25, feedback: { icon: "📊", title: "Relleno basado en hechos", text: "Número concreto, consecuencia real, sin juicio de carácter. Es difícil argumentar contra hechos observables." } },
+          { text: "Es que no estás cumpliendo con las tareas y eso afecta al equipo.", quality: "ok", tag: "ok", points: 10, feedback: { icon: "😑", title: "Relleno genérico", text: "Va directo pero sin especificidad. ¿Cuáles tareas? ¿Cómo afecta? Entre más datos, menos espacio para negarlo." } },
+          { text: "Francamente, si no puedes comprometerte, quizás este proyecto no es para ti.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "🔪", title: "Relleno amenazante", text: "Ultimátum como crítica no es retroalimentación — es presión. Cierra cualquier posibilidad de diálogo o cambio voluntario." } },
+        ]
+      },
+      {
+        id: "pan_bottom",
+        label: "🍞 Pan de abajo",
+        question: "¿Cómo cierras dejando la puerta abierta al cambio?",
+        layerType: "cierre",
+        options: [
+          { text: "Me gustaría que siguieras en el equipo. ¿Qué necesitas para que sea más manejable? A lo mejor el rol actual no es el que más te acomoda.", quality: "good", tag: "buena", points: 22, feedback: { icon: "🤝", title: "¡Cierre colaborativo!", text: "Le das opciones en lugar de un ultimátum. Esto invita a la honestidad — quizás él mismo no sabe por qué no entrega." } },
+          { text: "Espero que esto cambie para la próxima reunión.", quality: "ok", tag: "ok", points: 8, feedback: { icon: "⏰", title: "Cierre de plazo", text: "Pone presión sin ofrecer apoyo. Funcional pero frío. No sabes si el problema es pereza o un obstáculo real." } },
+          { text: "Esto es tu última oportunidad, el equipo ya no aguanta más.", quality: "bad", tag: "mala", points: 0, feedback: { icon: "💀", title: "Cierre ultimátum", text: "Terminar con presión grupal ('el equipo ya no aguanta') lo hace sentir juzgado por todos. Cualquier cambio que venga será forzado, no genuino." } },
+        ]
+      }
+    ]
+  }
+];
+
+// ============================================================
+// ESTADO DEL JUEGO
+// ============================================================
+let state = {
+  scenarioIndex: 0,
+  layerIndex: 0,
+  totalScore: 0,
+  layerScores: [],
+  builtLayers: [],
+  selectedOption: null,
+  answered: false
+};
+
+// ============================================================
+// NAVEGACIÓN DE PANTALLAS
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showTutorial() { showScreen('screen-tutorial'); }
+
+function startGame() {
+  state = { scenarioIndex: Math.floor(Math.random() * SCENARIOS.length), layerIndex: 0, totalScore: 0, layerScores: [], builtLayers: [], selectedOption: null, answered: false };
+  renderGame();
+  showScreen('screen-game');
+}
+
+function replayGame() {
+  startGame();
+}
+
+// ============================================================
+// RENDER DEL JUEGO
+// ============================================================
+function renderGame() {
+  const scenario = SCENARIOS[state.scenarioIndex];
+  const layer = scenario.layers[state.layerIndex];
+  const totalLayers = scenario.layers.length;
+
+  // Topbar
+  document.getElementById('game-step-label').textContent = `Capa ${state.layerIndex + 1} de ${totalLayers}`;
+  document.getElementById('score-display').textContent = state.totalScore;
+  document.getElementById('progress-fill').style.width = `${(state.layerIndex / totalLayers) * 100}%`;
+
+  // Escenario
+  document.getElementById('scenario-text').textContent = scenario.text;
+  document.getElementById('person-name').textContent = scenario.person.name;
+  document.getElementById('person-context').textContent = scenario.person.context;
+  document.getElementById('person-avatar').textContent = scenario.person.avatar;
+  document.getElementById('person-avatar').style.background = scenario.person.bg;
+
+  // Step indicator
+  const stepEl = document.getElementById('step-indicator');
+  stepEl.innerHTML = '';
+  scenario.layers.forEach((l, i) => {
+    if (i > 0) {
+      const line = document.createElement('div');
+      line.className = 'step-line' + (i <= state.layerIndex ? ' done' : '');
+      stepEl.appendChild(line);
+    }
+    const dot = document.createElement('div');
+    let cls = 'step-dot pending';
+    if (i < state.layerIndex) cls = 'step-dot done';
+    else if (i === state.layerIndex) cls = 'step-dot active';
+    dot.className = cls;
+    dot.textContent = i < state.layerIndex ? '✓' : (i + 1);
+    stepEl.appendChild(dot);
+  });
+
+  // Sandwich visual
+  renderSandwich();
+
+  // Reset feedback & next button
+  const fb = document.getElementById('feedback-bubble');
+  fb.className = 'feedback-bubble';
+  document.getElementById('btn-next').className = 'btn-next';
+
+  // Options label
+  document.getElementById('options-label').textContent = `${layer.label} — ${layer.question}`;
+
+  // Options
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  state.answered = false;
+  state.selectedOption = null;
+
+  layer.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span style="font-size:18px;flex-shrink:0;margin-top:2px">${getOptionEmoji(opt.quality)}</span><span>${opt.text}</span>`;
+    btn.onclick = () => selectOption(i);
+    container.appendChild(btn);
+  });
+}
+
+function getOptionEmoji(q) {
+  if (q === 'good') return '🍞';
+  if (q === 'ok') return '🫓';
+  return '🔥';
+}
+
+function renderSandwich() {
+  const vis = document.getElementById('sandwich-visual');
+  vis.innerHTML = '';
+  if (state.builtLayers.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-bread';
+    vis.appendChild(empty);
+    return;
+  }
+  state.builtLayers.forEach((l, i) => {
+    const el = document.createElement('div');
+    el.className = `layer-built ${l.type}`;
+    el.style.animationDelay = `${i * 0.05}s`;
+    el.textContent = l.text;
+    vis.appendChild(el);
+  });
+}
+
+function selectOption(index) {
+  if (state.answered) return;
+  state.answered = true;
+  state.selectedOption = index;
+
+  const scenario = SCENARIOS[state.scenarioIndex];
+  const layer = scenario.layers[state.layerIndex];
+  const opt = layer.options[index];
+
+  // Estilo del botón
+  const btns = document.querySelectorAll('.option-btn');
+  const selectedBtn = btns[index];
+  const qualityClass = { good: 'selected-good', ok: 'selected-ok', bad: 'selected-bad' }[opt.quality];
+  selectedBtn.className = `option-btn ${qualityClass}`;
+
+  // Añadir tag
+  const tag = document.createElement('span');
+  tag.className = `option-tag tag-${opt.quality === 'good' ? 'buena' : opt.quality === 'ok' ? 'ok' : 'mala'}`;
+  tag.textContent = opt.quality === 'good' ? 'BUENA' : opt.quality === 'ok' ? 'PASA' : 'EVITAR';
+  selectedBtn.querySelector('span:last-child').after(tag);
+
+  // Animación
+  if (opt.quality === 'good') selectedBtn.classList.add('bounce');
+  else if (opt.quality === 'bad') selectedBtn.classList.add('shake');
+
+  // Deshabilitar otras opciones
+  btns.forEach((b, i) => { if (i !== index) b.style.opacity = '0.4'; });
+
+  // Puntaje
+  state.totalScore += opt.points;
+  document.getElementById('score-display').textContent = state.totalScore;
+
+  // Agregar capa al sandwich visual
+  const labelShort = {
+    pan_top: '🍞 ' + opt.text.substring(0, 40) + (opt.text.length > 40 ? '…' : ''),
+    relleno: '🥩 ' + opt.text.substring(0, 40) + (opt.text.length > 40 ? '…' : ''),
+    pan_bottom: '🍞 ' + opt.text.substring(0, 40) + (opt.text.length > 40 ? '…' : ''),
+    pos: opt.text.substring(0, 40) + (opt.text.length > 40 ? '…' : ''),
+    cierre: opt.text.substring(0, 40) + (opt.text.length > 40 ? '…' : ''),
+  }[layer.id] || opt.text.substring(0, 45);
+
+  state.builtLayers.push({ type: layer.layerType, text: labelShort });
+  state.layerScores.push({ layerType: layer.layerType, quality: opt.quality, points: opt.points, fullText: opt.text });
+  renderSandwich();
+
+  // Feedback
+  showFeedback(opt);
+
+  // Scroll suave al feedback
+  setTimeout(() => {
+    document.getElementById('feedback-bubble').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 200);
+}
+
+function showFeedback(opt) {
+  const fb = document.getElementById('feedback-bubble');
+  const cls = opt.quality === 'good' ? 'fb-good' : opt.quality === 'ok' ? 'fb-ok' : 'fb-bad';
+  fb.className = `feedback-bubble visible ${cls}`;
+  document.getElementById('fb-icon').textContent = opt.feedback.icon;
+  document.getElementById('fb-title').textContent = opt.feedback.title;
+  document.getElementById('fb-text').textContent = opt.feedback.text;
+
+  const nextBtn = document.getElementById('btn-next');
+  const scenario = SCENARIOS[state.scenarioIndex];
+  const isLast = state.layerIndex >= scenario.layers.length - 1;
+  nextBtn.textContent = isLast ? '🥪 Ver mi sandwich completo' : 'Siguiente capa →';
+  nextBtn.className = 'btn-next visible';
+}
+
+function nextStep() {
+  const scenario = SCENARIOS[state.scenarioIndex];
+  if (state.layerIndex >= scenario.layers.length - 1) {
+    showResult();
+    return;
+  }
+  state.layerIndex++;
+  state.answered = false;
+  const scrollArea = document.getElementById('scroll-area');
+  scrollArea.scrollTo({top: 0, behavior: 'smooth'});
+  setTimeout(renderGame, 300);
+}
+
+// ============================================================
+// RESULTADO
+// ============================================================
+function showResult() {
+  const maxScore = SCENARIOS[state.scenarioIndex].layers.reduce((a, l) => a + Math.max(...l.options.map(o => o.points)), 0);
+  const pct = state.totalScore / maxScore;
+
+  let emoji, title;
+  if (pct >= 0.85) { emoji = '🏆'; title = '¡Maestro sandwichero!'; }
+  else if (pct >= 0.6) { emoji = '👨‍🍳'; title = '¡Buen trabajo, chef!'; }
+  else if (pct >= 0.35) { emoji = '🥪'; title = 'Sandwich en progreso'; }
+  else { emoji = '😅'; title = 'Volvamos a la cocina'; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+
+  const scoreEl = document.getElementById('final-score');
+  scoreEl.textContent = state.totalScore;
+  scoreEl.style.color = pct >= 0.85 ? 'var(--lechuga)' : pct >= 0.6 ? 'var(--pan)' : pct >= 0.35 ? 'var(--mostaza)' : 'var(--tomate)';
+
+  const stars = pct >= 0.85 ? '⭐⭐⭐' : pct >= 0.6 ? '⭐⭐' : '⭐';
+  document.getElementById('score-stars').textContent = stars;
+
+  // Sandwich resultado
+  const rs = document.getElementById('result-sandwich');
+  rs.innerHTML = '';
+  state.layerScores.forEach((l, i) => {
+    const colors = { pan: ['#C4854A', '#8B5E3C'], critica: ['#E84855', '#C23040'], cierre: ['#4A90D9', '#2E6DB4'] };
+    const [c1, c2] = colors[l.type] || ['#999', '#666'];
+    const el = document.createElement('div');
+    el.className = 'result-layer';
+    el.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+    el.style.animationDelay = `${i * 0.12}s`;
+    el.style.opacity = l.quality === 'bad' ? '0.6' : '1';
+
+    const icons = { pan: '🍞', critica: '🥩', cierre: '🍞' };
+    el.textContent = `${icons[l.type] || ''} ${l.fullText.substring(0, 55)}${l.fullText.length > 55 ? '…' : ''}`;
+    rs.appendChild(el);
+  });
+
+  // Tip
+  const tips = {
+    good_all: "Tu sandwich tuvo estructura perfecta: apertura genuina, crítica clara sin atacar, y cierre que deja la puerta abierta. Así se construye confianza.",
+    good_most: "Buen trabajo general. La clave es que el relleno sea específico y observable — eso hace la crítica incuestionable y accionable.",
+    mixed: "El sandwich funcionó a medias. Revisa qué capas fueron débiles: generalmente es el cierre donde se pierde la oportunidad de dejar a la persona con agencia.",
+    poor: "El mensaje importante se perdió en la forma. Practicar separar conductas de identidad ('hiciste X' vs 'eres X') es el primer paso."
+  };
+
+  const goodCount = state.layerScores.filter(l => l.quality === 'good').length;
+  const tipKey = goodCount === 3 ? 'good_all' : goodCount === 2 ? 'good_most' : goodCount === 1 ? 'mixed' : 'poor';
+  document.getElementById('result-tip-text').textContent = tips[tipKey];
+
+  showScreen('screen-result');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+showScreen('screen-intro');
+</script>
+</body>
+</html>
