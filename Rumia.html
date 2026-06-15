@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-50 font-sans select-none antialiased">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pausa: Rompe el Bucle</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .screen { display: none; }
+        .screen.active { display: flex; flex-direction: column; min-height: calc(100dvh - 4rem); }
+        .pulse { animation: pulse 4s infinite ease-in-out; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); background-color: rgba(99, 102, 241, 0.15); }
+            50% { transform: scale(1.12); background-color: rgba(99, 102, 241, 0.35); }
+        }
+        /* Animación suave para las hojas del río */
+        @keyframes floatAway {
+            0% { transform: translateY(0) scale(1); opacity: 1; filter: blur(0); }
+            100% { transform: translateY(-100px) scale(0.8); opacity: 0; filter: blur(4px); }
+        }
+        .leaf-animation { animation: floatAway 2.5s forwards ease-in-out; }
+    </style>
+</head>
+<body class="h-full flex flex-col">
+
+    <header class="w-full h-14 border-b border-slate-900 bg-slate-950/80 backdrop-blur px-4 flex items-center justify-between sticky top-0 z-50">
+        <a href="index.html" class="flex items-center space-x-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors py-2">
+            <span>🗂️</span>
+            <span class="font-medium">Menú Principal</span>
+        </a>
+        <button onclick="restartExperience()" class="flex items-center space-x-1 text-xs text-slate-400 hover:text-rose-400 transition-colors py-2">
+            <span>↻</span>
+            <span>Reiniciar</span>
+        </button>
+    </header>
+
+    <div class="w-full h-1 bg-slate-900">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 w-1/4 transition-all duration-500 ease-out"></div>
+    </div>
+
+    <main class="max-w-md mx-auto w-full px-5 py-6 flex-1 flex flex-col justify-between">
+
+        <section id="screen1" class="screen active">
+            <div class="my-auto text-center space-y-8">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-500/10 px-2.5 py-1 rounded-full">Fase 1: Interrumpir</span>
+                    <h1 class="text-2xl font-bold tracking-tight pt-2">Saca el pensamiento de tu cabeza y llévalo a tu cuerpo.</h1>
+                </div>
+                
+                <div class="flex items-center justify-center h-44">
+                    <div id="breathCircle" class="pulse w-32 h-32 rounded-full border border-indigo-500/30 flex items-center justify-center transition-all duration-1000">
+                        <span id="breathText" class="text-xs font-semibold uppercase tracking-widest text-indigo-200">Inhala</span>
+                    </div>
+                </div>
+                
+                <p class="text-sm text-slate-400 max-w-xs mx-auto leading-relaxed">
+                    Sigue el ritmo del círculo. Siente el peso de tus pies apoyados firmemente en el suelo mientras lo haces.
+                </p>
+            </div>
+            <button onclick="nextScreen(2)" class="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 py-4 rounded-xl font-medium tracking-wide transition-colors mt-6">
+                Ya estoy más presente →
+            </button>
+        </section>
+
+
+        <section id="screen2" class="screen">
+            <div class="my-auto space-y-6">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-500/10 px-2.5 py-1 rounded-full">Fase 2: Evidencia</span>
+                    <h2 class="text-2xl font-bold tracking-tight pt-2">¿Estás resolviendo un problema o rumiando?</h2>
+                </div>
+
+                <p class="text-slate-300 leading-relaxed text-sm">
+                    La mente nos engaña haciéndonos creer que analizar el mismo pensamiento una y otra vez es útil. Comparemos:
+                </p>
+
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div class="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 space-y-2">
+                        <div class="flex items-center space-x-1 text-emerald-400 font-bold text-xs uppercase tracking-wider">
+                            <span>✓</span> <span>Resolución</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-normal">Se mueve hacia adelante. Genera acciones pequeñas y alternativas reales.</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-rose-500/5 border border-rose-500/10 space-y-2">
+                        <div class="flex items-center space-x-1 text-rose-400 font-bold text-xs uppercase tracking-wider">
+                            <span>✕</span> <span>Rumia</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-normal">Gira en círculos. Pregunta "¿Por qué a mí?" o "¿Y si...?", generando parálisis.</p>
+                    </div>
+                </div>
+
+                <blockquote class="border-l-2 border-indigo-500/30 pl-4 py-1 italic text-xs text-slate-400">
+                    Si el pensamiento no te lleva a una acción concreta en los próximos 5 minutos, es ruido, no una solución.
+                </blockquote>
+            </div>
+            <button onclick="nextScreen(3)" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl font-medium tracking-wide transition-colors mt-6 shadow-lg shadow-indigo-600/10">
+                Vamos a desactivarlo
+            </button>
+        </section>
+
+
+        <section id="screen3" class="screen">
+            <div class="my-auto space-y-5">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-500/10 px-2.5 py-1 rounded-full">Fase 3: El Desvío</span>
+                    <h2 class="text-2xl font-bold tracking-tight pt-2">Elige tu ejercicio de acompañamiento</h2>
+                </div>
+                <p class="text-slate-400 text-sm">Selecciona la herramienta interactiva que prefieras experimentar ahora mismo:</p>
+
+                <div class="space-y-3">
+                    <button onclick="startActivity('postpone')" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-left transition-all flex justify-between items-center group">
+                        <div class="space-y-1 pr-4">
+                            <span class="font-semibold text-sm text-slate-200 group-hover:text-indigo-400 transition-colors">1. Contenedor de Preocupaciones</span>
+                            <p class="text-xs text-slate-400">Para archivar pensamientos recurrentes y revisarlos después.</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 font-mono">MCT</span>
+                    </button>
+
+                    <button onclick="startActivity('river')" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-left transition-all flex justify-between items-center group">
+                        <div class="space-y-1 pr-4">
+                            <span class="font-semibold text-sm text-slate-200 group-hover:text-indigo-400 transition-colors">2. El Río de la Defusión</span>
+                            <p class="text-xs text-slate-400">Para dejar ir suposiciones caóticas de forma visual.</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 font-mono">ACT</span>
+                    </button>
+
+                    <button onclick="startActivity('timer')" class="w-full p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-indigo-500/40 text-left transition-all flex justify-between items-center group">
+                        <div class="space-y-1 pr-4">
+                            <span class="font-semibold text-sm text-slate-200 group-hover:text-indigo-400 transition-colors">3. Desbloqueo de 5 Minutos</span>
+                            <p class="text-xs text-slate-400">Para romper la parálisis mental mediante acción física guiada.</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded bg-indigo-500/10 text-indigo-400 font-mono">TCC</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="screen3-postpone" class="screen">
+            <div class="my-auto space-y-5">
+                <div class="space-y-1">
+                    <span class="text-xs font-mono text-indigo-400 uppercase">Terapia Metacognitiva</span>
+                    <h2 class="text-xl font-bold">El Contenedor de Pensamientos</h2>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    No puedes prohibirle a tu mente pensar, pero sí puedes decidir <b>cuándo</b> darle tu atención. Vamos a posponer voluntariamente este bucle.
+                </p>
+                <div class="space-y-3 bg-slate-900/50 p-4 rounded-xl border border-slate-900">
+                    <label class="text-xs font-medium text-slate-400 block">¿Cuál es el pensamiento exacto que te está atrapando?</label>
+                    <input type="text" id="postponeThought" placeholder="Escribe el bucle aquí..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                    
+                    <label class="text-xs font-medium text-slate-400 block pt-2">Elige un momento del día para procesarlo (Máx. 15 min):</label>
+                    <select id="postponeTime" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-slate-300 focus:outline-none focus:border-indigo-500">
+                        <option value="hoy por la tarde a las 6:00 PM">Hoy a las 6:00 PM</option>
+                        <option value="hoy más tarde a las 8:00 PM">Hoy a las 8:00 PM</option>
+                        <option value="mañana por la mañana a las 10:00 AM">Mañana a las 10:00 AM</option>
+                    </select>
+                </div>
+                <div id="postponeConfirmation" class="hidden p-3 rounded-xl bg-indigo-500/5 border border-indigo-500/20 text-xs text-indigo-300 leading-normal text-center">
+                    🔒 Guardado. Tu mente sabe que se agendó. Si el pensamiento regresa antes, dile firmemente: <i>"Ahora no, ya tengo una cita para esto"</i>.
+                </div>
+            </div>
+            <div class="space-y-2 mt-6">
+                <button onclick="lockWorry()" id="btnLockWorry" class="w-full bg-indigo-600 hover:bg-indigo-500 py-3.5 rounded-xl font-medium text-sm transition-colors">
+                    Archivar preocupación
+                </button>
+                <button onclick="nextScreen(4)" id="btnPostponeNext" class="hidden w-full bg-slate-900 border border-slate-800 hover:border-slate-700 py-3.5 rounded-xl font-medium text-sm transition-colors">
+                    Continuar →
+                </button>
+            </div>
+        </section>
+
+
+        <section id="screen3-river" class="screen">
+            <div class="my-auto space-y-5">
+                <div class="space-y-1">
+                    <span class="text-xs font-mono text-indigo-400 uppercase">Aceptación y Compromiso</span>
+                    <h2 class="text-xl font-bold">El Río de la Defusión</h2>
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Los pensamientos son solo eventos mentales, palabras flotando. No son la realidad, no eres tú. Vamos a verlos pasar.
+                </p>
+                
+                <div class="h-40 bg-slate-900/40 border border-slate-900 rounded-xl relative overflow-hidden flex flex-col justify-center items-center px-4 text-center">
+                    <div id="riverLayer" class="absolute inset-0 bg-gradient-to-b from-indigo-950/10 to-indigo-900/5 pointer-events-none"></div>
+                    <div id="leafThought" class="text-xs font-medium text-indigo-200 bg-indigo-950/60 border border-indigo-500/30 px-3 py-2 rounded-lg max-w-full italic transition-all hidden">
+                        </div>
+                    <span id="riverPlaceholder" class="text-xs text-slate-600">El río está despejado. Coloca un pensamiento abajo.</span>
+                </div>
+
+                <div class="space-y-2">
+                    <input type="text" id="riverInput" placeholder="Escribe un pensamiento angustiante..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                    <button onclick="dropLeaf()" class="w-full bg-slate-800 hover:bg-slate-700 py-2.5 rounded-lg font-medium text-xs text-indigo-300 transition-colors">
+                        🍃 Colocar en una hoja y soltar al río
+                    </button>
+                </div>
+            </div>
+            <button onclick="nextScreen(4)" class="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 py-3.5 rounded-xl font-medium text-sm transition-colors mt-6">
+                Me siento más desapegado, avanzar →
+            </button>
+        </section>
+
+
+        <section id="screen3-timer" class="screen">
+            <div class="my-auto text-center space-y-6">
+                <div class="space-y-1">
+                    <span class="text-xs font-mono text-indigo-400 uppercase block">Terapia Cognitivo-Conductual</span>
+                    <h2 class="text-xl font-bold">Activación Conductual Guiada</h2>
+                </div>
+                <p class="text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
+                    La atención sigue al movimiento. Vamos a romper la parálisis física ahora mismo con un desafío de atención focalizada de 2 minutos.
+                </p>
+
+                <div class="py-4">
+                    <div id="timerDisplay" class="text-4xl font-mono font-bold tracking-wider text-indigo-400">02:00</div>
+                    <span id="timerStatus" class="text-xs text-slate-500 block mt-1">Listo para iniciar</span>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-left text-xs space-y-2 text-slate-300 max-w-xs mx-auto">
+                    <p class="font-semibold text-indigo-300">🎯 Instrucciones del reto:</p>
+                    <p>Ponte de pie, deja el teléfono sobre la mesa e involúcrate al 100% en ordenar un área pequeña, estirar tus piernas o lavarte la cara hasta que suene la alarma.</p>
+                </div>
+            </div>
+            
+            <div class="space-y-2 mt-6">
+                <button onclick="toggleTimer()" id="btnTimerControl" class="w-full bg-emerald-600 hover:bg-emerald-500 py-3.5 rounded-xl font-medium text-sm transition-colors shadow-lg shadow-emerald-600/10">
+                    Comenzar desafío ahora
+                </button>
+                <button onclick="nextScreen(4)" id="btnTimerNext" class="hidden w-full bg-slate-900 border border-slate-800 hover:border-slate-700 py-3.5 rounded-xl font-medium text-sm transition-colors">
+                    Desafío completado →
+                </button>
+            </div>
+        </section>
+
+
+        <section id="screen4" class="screen">
+            <div class="my-auto space-y-6">
+                <div class="space-y-2">
+                    <span class="text-xs font-bold tracking-wider text-indigo-400 uppercase bg-indigo-500/10 px-2.5 py-1 rounded-full">Fase 4: Actuar</span>
+                    <h2 class="text-2xl font-bold tracking-tight pt-2">Tu ancla en el mundo real</h2>
+                </div>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Has completado el entrenamiento cognitivo de hoy. Para consolidarlo, necesitas salir por completo del entorno digital. ¿Cuál será tu micro-acción física e inmediata en cuanto bloquees la pantalla?
+                </p>
+
+                <div class="space-y-2">
+                    <label class="text-xs text-slate-400 font-medium uppercase tracking-wider">Mi próximo paso físico:</label>
+                    <input type="text" id="actionInput" placeholder="Ej: Preparar un té, caminar al patio, abrir la ventana..." class="w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+
+                <div class="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/10 text-xs text-slate-400 leading-normal">
+                    💡 <b>Efecto Práctico:</b> Al estructurar y declarar una acción inmediata, reduces dramáticamente la probabilidad de que la mente regrese al ciclo pasivo de la rumia.
+                </div>
+            </div>
+            
+            <button onclick="finishExperience()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 py-4 rounded-xl font-medium tracking-wide transition-colors mt-6 shadow-lg shadow-indigo-600/20">
+                Cerrar pantalla y actuar
+            </button>
+        </section>
+
+    </main>
+
+    <script>
+        // Screen Navigation State Management
+        let currentActiveScreen = 1;
+
+        function nextScreen(screenNum) {
+            // Stop dynamic systems if moving away from active tool screens
+            if (currentActiveScreen === 'timer') stopTimerCountdown();
+
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            
+            let targetScreen = `screen${screenNum}`;
+            if (typeof screenNum === 'string') {
+                targetScreen = `screen3-${screenNum}`;
+                currentActiveScreen = screenNum;
+            } else {
+                currentActiveScreen = screenNum;
+            }
+
+            document.getElementById(targetScreen).classList.add('active');
+            
+            // Map progress visually
+            let progressPercentage = 25;
+            if (targetScreen.includes('screen3')) progressPercentage = 65;
+            if (screenNum === 4) progressPercentage = 100;
+            if (screenNum === 2) progressPercentage = 45;
+            
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+            window.scrollTo(0, 0);
+        }
+
+        function restartExperience() {
+            stopTimerCountdown();
+            // Clear interactive data states
+            document.getElementById('postponeThought').value = "";
+            document.getElementById('riverInput').value = "";
+            document.getElementById('actionInput').value = "";
+            document.getElementById('postponeConfirmation').classList.add('hidden');
+            document.getElementById('btnLockWorry').classList.remove('hidden');
+            document.getElementById('btnPostponeNext').classList.add('hidden');
+            document.getElementById('riverPlaceholder').classList.remove('hidden');
+            document.getElementById('leafThought').classList.add('hidden');
+            
+            nextScreen(1);
+        }
+
+        // Phase 1: Symmetric Breathing Engine (CSS driven fallback)
+        const breathText = document.getElementById('breathText');
+        let breathState = 0; 
+        setInterval(() => {
+            if (document.getElementById('screen1').classList.contains('active')) {
+                breathState = breathState === 0 ? 1 : 0;
+                breathText.textContent = breathState === 1 ? "Exhala" : "Inhala";
+            }
+        }, 4000);
+
+        // Phase 3: Route to specific tools
+        function startActivity(toolKey) {
+            nextScreen(toolKey);
+        }
+
+        // TOOL A: MCT Postpone Logic
+        function lockWorry() {
+            const thought = document.getElementById('postponeThought').value.trim();
+            const chosenTime = document.getElementById('postponeTime').value;
+            if(!thought) return alert("Por favor escribe brevemente qué pensamiento te preocupa.");
+            
+            document.getElementById('btnLockWorry').classList.add('hidden');
+            const confirmation = document.getElementById('postponeConfirmation');
+            confirmation.innerHTML = `🔒 <b>Archivado correctamente:</b> Tu mente sabe que procesarás "${thought}" hoy a las ${chosenTime.split('a las')[1] || 'la hora elegida'}. Es seguro dejarlo ir por ahora.`;
+            confirmation.classList.remove('hidden');
+            document.getElementById('btnPostponeNext').classList.remove('hidden');
+        }
+
+        // TOOL B: ACT River Engine
+        function dropLeaf() {
+            const riverInput = document.getElementById('riverInput');
+            const thoughtText = riverInput.value.trim();
+            if (!thoughtText) return;
+
+            const leaf = document.getElementById('leafThought');
+            const placeholder = document.getElementById('riverPlaceholder');
+
+            placeholder.class= "hidden";
+            placeholder.classList.add('hidden');
+            
+            leaf.textContent = `"${thoughtText}"`;
+            leaf.classList.remove('hidden', 'leaf-animation');
+            
+            // Force dom reflow to trigger CSS keyframes smoothly
+            void leaf.offsetWidth; 
+            
+            leaf.classList.add('leaf-animation');
+            riverInput.value = "";
+
+            setTimeout(() => {
+                placeholder.classList.remove('hidden');
+                placeholder.textContent = "El pensamiento se ha alejado. Coloca otro si es necesario.";
+            }, 2400);
+        }
+
+        // TOOL C: CBT Timer Counter Engine
+        let timerInterval = null;
+        let timeLeft = 120; // 2 Minutes clinical behavioral focus trial
+        let timerRunning = false;
+
+        function toggleTimer() {
+            const btn = document.getElementById('btnTimerControl');
+            if (timerRunning) {
+                stopTimerCountdown();
+                btn.textContent = "Reanudar desafío";
+                btn.className = "w-full bg-indigo-600 hover:bg-indigo-500 py-3.5 rounded-xl font-medium text-sm transition-colors";
+            } else {
+                timerRunning = true;
+                document.getElementById('timerStatus').textContent = "⚡ Desafío activo. Deja el teléfono libre.";
+                btn.textContent = "Pausar";
+                btn.className = "w-full bg-slate-800 border border-slate-700 py-3.5 rounded-xl font-medium text-sm text-slate-400 transition-colors";
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) {
+                        stopTimerCountdown();
+                        document.getElementById('timerStatus').textContent = "🎉 ¡Tiempo completado! Regresa aquí.";
+                        btn.classList.add('hidden');
+                        document.getElementById('btnTimerNext').classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+        }
+
+        function stopTimerCountdown() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const seconds = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').textContent = `${minutes}:${seconds}`;
+        }
+
+        // Phase 4: Final Closure
+        function finishExperience() {
+            const action = document.getElementById('actionInput').value.trim();
+            if(action !== "") {
+                alert(`Excelente paso. Bloquea tu pantalla ahora mismo y ve a: "${action}".`);
+            } else {
+                alert("Perfecto. Bloquea tu pantalla e incorpórate de nuevo a tu entorno físico.");
+            }
+        }
+    </script>
+</body>
+</html>

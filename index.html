@@ -3,229 +3,414 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Laboratorio de Cosas</title>
-
 <style>
-:root{
-    --bg:#111827;
-    --card:#1f2937;
-    --card-hover:#2b3648;
-    --text:#f9fafb;
-    --muted:#9ca3af;
-    --accent:#34d399;
-    --accent-hover:#10b981;
-}
+  /* ── Tokens ─────────────────────────────────────────── */
+  :root {
+    --bg:           #111827;
+    --card:         #1f2937;
+    --card-hover:   #2b3648;
+    --text:         #f9fafb;
+    --muted:        #9ca3af;
+    --accent:       #34d399;
+    --accent-hover: #10b981;
+    --accent-dim:   rgba(52,211,153,.12);
+    --border:       rgba(255,255,255,.08);
+    --soon-bg:      rgba(255,255,255,.04);
+    --soon-text:    #6b7280;
+  }
 
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
+  /* ── Reset ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-    background:var(--bg);
-    color:var(--text);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    line-height:1.6;
-}
+  /* ── Base ────────────────────────────────────────────── */
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+  }
 
-.container{
-    max-width:700px;
-    margin:auto;
-    padding:24px 18px 48px;
-}
+  /* ── Layout ──────────────────────────────────────────── */
+  .container {
+    max-width: 700px;
+    margin: auto;
+    padding: 24px 18px 64px;
+  }
 
-.hero{
-    text-align:center;
-    margin-bottom:32px;
-}
+  /* ── Hero ────────────────────────────────────────────── */
+  .hero {
+    text-align: center;
+    margin-bottom: 40px;
+  }
 
-.logo{
-    font-size:4rem;
-    margin-bottom:8px;
-}
+  .logo {
+    font-size: 4rem;
+    margin-bottom: 8px;
+    display: block;
+  }
 
-h1{
-    font-size:2rem;
-    margin-bottom:8px;
-}
+  h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -.02em;
+  }
 
-.subtitle{
-    color:var(--accent);
-    font-weight:600;
-    margin-bottom:20px;
-}
+  .subtitle {
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
 
-.description{
-    color:var(--muted);
-    font-size:1rem;
-}
+  .description {
+    color: var(--muted);
+    font-size: .95rem;
+    max-width: 520px;
+    margin: 0 auto;
+  }
 
-.section-title{
-    margin-bottom:16px;
-    font-size:1.2rem;
-    font-weight:700;
-}
+  /* ── Section header ──────────────────────────────────── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
 
-.card{
-    background:var(--card);
-    border-radius:18px;
-    padding:20px;
-    transition:.2s;
-    border:1px solid rgba(255,255,255,.08);
-}
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
 
-.card:hover{
-    background:var(--card-hover);
-}
+  .section-count {
+    font-size: .8rem;
+    color: var(--muted);
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+  }
 
-.experiment-icon{
-    font-size:2rem;
-    margin-bottom:10px;
-}
+  /* ── Experiment list ─────────────────────────────────── */
+  #experiments {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
 
-.experiment-title{
-    font-size:1.4rem;
-    font-weight:700;
-    margin-bottom:10px;
-}
+  /* ── Card ────────────────────────────────────────────── */
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    transition: background .2s, transform .15s;
+  }
 
-.duration{
-    color:var(--accent);
-    margin:12px 0;
-    font-weight:600;
-}
+  .card:hover { background: var(--card-hover); }
 
-.button{
-    display:block;
-    width:100%;
-    text-align:center;
-    background:var(--accent);
-    color:#052e16;
-    text-decoration:none;
-    font-weight:700;
-    padding:14px;
-    border-radius:12px;
-    margin-top:16px;
-    transition:.2s;
-}
+  .card.soon {
+    background: var(--soon-bg);
+    opacity: .7;
+  }
 
-.button:hover{
-    background:var(--accent-hover);
-}
+  /* Card top row */
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
 
-.lab-note{
-    margin-top:28px;
-    text-align:center;
-    color:var(--muted);
-    font-style:italic;
-    font-size:.95rem;
-}
+  .card-icon {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
 
-footer{
-    margin-top:40px;
-    text-align:center;
-    color:#6b7280;
-    font-size:.85rem;
-}
+  .card-meta { flex: 1; }
 
-@media (min-width:768px){
-    h1{
-        font-size:2.6rem;
-    }
-}
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .badge {
+    font-size: .72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+
+  .badge-category {
+    background: rgba(255,255,255,.06);
+    color: var(--muted);
+  }
+
+  .badge-soon {
+    background: rgba(251,191,36,.1);
+    color: #fbbf24;
+  }
+
+  .badge-new {
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* Card body */
+  .card-body {
+    color: var(--muted);
+    font-size: .95rem;
+    line-height: 1.65;
+  }
+
+  .card-body p + p { margin-top: 8px; }
+
+  /* Duration */
+  .duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: .9rem;
+    margin-top: 14px;
+  }
+
+  /* CTA button */
+  .button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--accent);
+    color: #052e16;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 13px;
+    border-radius: 12px;
+    margin-top: 16px;
+    transition: background .2s;
+    font-size: .95rem;
+  }
+
+  .button:hover { background: var(--accent-hover); }
+
+  .button-soon {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 13px;
+    border-radius: 12px;
+    margin-top: 16px;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--soon-text);
+    background: rgba(255,255,255,.04);
+    border: 1px dashed rgba(255,255,255,.1);
+    cursor: default;
+    user-select: none;
+  }
+
+  /* ── Lab note ────────────────────────────────────────── */
+  .lab-note {
+    margin-top: 36px;
+    text-align: center;
+    color: var(--muted);
+    font-style: italic;
+    font-size: .9rem;
+    min-height: 1.4em;
+    transition: opacity .4s;
+  }
+
+  /* ── Footer ──────────────────────────────────────────── */
+  footer {
+    margin-top: 48px;
+    text-align: center;
+    color: #4b5563;
+    font-size: .8rem;
+  }
+
+  /* ── Responsive ──────────────────────────────────────── */
+  @media (min-width: 768px) {
+    h1 { font-size: 2.6rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { transition: none; }
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
 
-    <section class="hero">
-        <div class="logo">🧪</div>
+  <!-- Hero -->
+  <section class="hero">
+    <span class="logo">🧪</span>
+    <h1>Laboratorio de Cosas</h1>
+    <p class="subtitle">Experimentos cortos para descubrir ideas útiles.</p>
+    <p class="description">
+      En este laboratorio no damos clases. Probamos cosas.<br><br>
+      Cada experimento es una actividad breve diseñada para ayudarte
+      a descubrir algo por tu cuenta. Algunas veces jugarás.
+      Otras veces compararás experiencias. En ocasiones terminarás
+      entendiendo algo que parecía obvio, pero que nunca habías visto
+      con claridad.
+    </p>
+  </section>
 
-        <h1>Laboratorio de Cosas</h1>
-
-        <p class="subtitle">
-            Experimentos cortos para descubrir ideas útiles.
-        </p>
-
-        <p class="description">
-            En este laboratorio no damos clases.
-            Probamos cosas.
-            <br><br>
-            Cada experimento es una actividad breve diseñada para ayudarte
-            a descubrir algo por tu cuenta. Algunas veces jugarás.
-            Otras veces compararás experiencias.
-            En ocasiones terminarás entendiendo algo que parecía obvio,
-            pero que nunca habías visto con claridad.
-        </p>
-    </section>
-
-    <section>
-        <h2 class="section-title">
-            Experimentos disponibles
-        </h2>
-
-        <div class="card">
-
-            <div class="experiment-icon">🥪</div>
-
-            <div class="experiment-title">
-                Artista del Sándwich
-            </div>
-
-            <p>
-                ¿Es posible decir algo difícil sin que la otra persona
-                se ponga a la defensiva?
-            </p>
-
-            <br>
-
-            <p>
-                Construye mensajes usando los ingredientes correctos
-                y descubre una forma sencilla de comunicar peticiones,
-                críticas o desacuerdos de manera más efectiva.
-            </p>
-
-            <div class="duration">
-                ⏱ 5–10 minutos
-            </div>
-
-            <a href="ArtistaSand.html" class="button">
-                Comenzar experimento
-            </a>
-
-        </div>
-    </section>
-
-    <div class="lab-note" id="labNote">
-        Experimento #001 listo para pruebas.
+  <!-- Experiment list -->
+  <section>
+    <div class="section-header">
+      <h2 class="section-title">Experimentos disponibles</h2>
+      <span class="section-count" id="countBadge"></span>
     </div>
 
-    <footer>
-        Laboratorio de Cosas
-    </footer>
+    <div id="experiments"></div>
+  </section>
+
+  <!-- Rotating lab note -->
+  <p class="lab-note" id="labNote"></p>
+
+  <footer>Laboratorio de Cosas</footer>
 
 </div>
 
 <script>
-const notes = [
+  /* ═══════════════════════════════════════════════════════
+     EXPERIMENTS DATA
+     ─────────────────────────────────────────────────────
+     Para agregar una nueva actividad, sólo añade un objeto
+     a este arreglo. El índice se genera automáticamente.
+     Campos:
+       id        → número de experimento (para mostrar)
+       icon      → emoji
+       title     → nombre del experimento
+       slug      → nombre del archivo HTML (p. ej. "MiExp.html")
+       category  → etiqueta de categoría
+       tagline   → pregunta/gancho corto
+       body      → descripción más larga (HTML permitido)
+       duration  → "5–10 minutos"
+       status    → "available" | "soon" | "new"
+  ═══════════════════════════════════════════════════════ */
+  const EXPERIMENTS = [
+    {
+      id: "001",
+      icon: "🥪",
+      title: "Artista del Sándwich",
+      slug: "ArtistaSand.html",
+      category: "Comunicación",
+      tagline: "¿Es posible decir algo difícil sin que la otra persona se ponga a la defensiva?",
+      body: "Construye mensajes usando los ingredientes correctos y descubre una forma sencilla de comunicar peticiones, críticas o desacuerdos de manera más efectiva.",
+      duration: "5–10 minutos",
+      status: "available",
+    },
+    {
+      id: "002",
+      icon: "🌀",
+      title: "Rumia",
+      slug: "Rumia-2.html",
+      category: "Mente",
+      tagline: "¿Cuánto tiempo llevas dándole vueltas a lo mismo?",
+      body: "Explora el patrón de pensamiento repetitivo que a veces confundimos con resolver problemas — y practica una salida.",
+      duration: "10–15 minutos",
+      status: "new",
+    },
+    /* ── PLANTILLA — quita el comentario para agregar más ──
+    {
+      id: "003",
+      icon: "🔮",
+      title: "Nombre del experimento",
+      slug: "MiExperimento.html",
+      category: "Categoría",
+      tagline: "Pregunta gancho corta.",
+      body: "Descripción del experimento.",
+      duration: "X–Y minutos",
+      status: "soon",   // "available" | "soon" | "new"
+    },
+    ── ─────────────────────────────────────────────────── */
+  ];
+
+  /* ── Render ────────────────────────────────────────── */
+  function renderExperiments() {
+    const container = document.getElementById("experiments");
+    const countBadge = document.getElementById("countBadge");
+
+    const available = EXPERIMENTS.filter(e => e.status !== "soon").length;
+    countBadge.textContent = `${available} disponible${available !== 1 ? "s" : ""}`;
+
+    container.innerHTML = EXPERIMENTS.map(exp => {
+      const isSoon = exp.status === "soon";
+      const isNew  = exp.status === "new";
+
+      const badges = `
+        <div class="card-badges">
+          <span class="badge badge-category">${exp.category}</span>
+          ${isNew  ? '<span class="badge badge-new">Nuevo</span>' : ""}
+          ${isSoon ? '<span class="badge badge-soon">Próximamente</span>' : ""}
+        </div>
+      `;
+
+      const cta = isSoon
+        ? `<span class="button-soon">En construcción…</span>`
+        : `<a href="${exp.slug}" class="button">Comenzar experimento →</a>`;
+
+      return `
+        <div class="card${isSoon ? " soon" : ""}">
+          <div class="card-header">
+            <span class="card-icon">${exp.icon}</span>
+            <div class="card-meta">
+              <div class="card-title">${exp.title}</div>
+              ${badges}
+            </div>
+          </div>
+          <div class="card-body">
+            <p><strong style="color:var(--text)">${exp.tagline}</strong></p>
+            <p>${exp.body}</p>
+          </div>
+          <div class="duration">⏱ ${exp.duration}</div>
+          ${cta}
+        </div>
+      `;
+    }).join("");
+  }
+
+  /* ── Rotating lab notes ───────────────────────────── */
+  const NOTES = [
     "Experimento #001 listo para pruebas.",
     "Advertencia: algunos descubrimientos siguen dando vueltas después de terminar.",
-    "Buscando voluntarios curiosos...",
+    "Buscando voluntarios curiosos…",
     "Los resultados pueden ser inesperados.",
-    "Todavía estamos construyendo nuevos experimentos."
-];
+    "Todavía estamos construyendo nuevos experimentos.",
+    "Cada experimento dura menos que un café.",
+  ];
 
-const noteElement = document.getElementById("labNote");
+  function rotateNote() {
+    const el = document.getElementById("labNote");
+    el.style.opacity = "0";
+    setTimeout(() => {
+      el.textContent = NOTES[Math.floor(Math.random() * NOTES.length)];
+      el.style.opacity = "1";
+    }, 400);
+  }
 
-setInterval(() => {
-    const random =
-        notes[Math.floor(Math.random() * notes.length)];
-
-    noteElement.textContent = random;
-}, 5000);
+  /* ── Init ─────────────────────────────────────────── */
+  renderExperiments();
+  rotateNote();
+  setInterval(rotateNote, 5000);
 </script>
 
 </body>
